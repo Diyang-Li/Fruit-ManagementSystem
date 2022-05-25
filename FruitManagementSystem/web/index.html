@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!-- 在html标签内加入Thymeleaf名称空间的声明 -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fruit Storage</title>
+    <link rel="stylesheet" href="css/index.css">
+    <script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+<div id="div_container">
+    <div id="div_fruit_list">
+        <p class="center f30">Welcome use Fruit Storage System!</p>
+        <div id="add_fruit_div">
+            <form th:href="@{/fruit.do}" method="post" id="search_keyword">
+                <!--                用来区分是post还是get request，注意这里要有value值！！！！否则index收不到请求-->
+                <input type="hidden" name="oper" value="search">
+               Keyword: <input type="text" name="keyword" th:value="${session.keyword}"/>
+                <input type="submit" value="Search" class="btn"/>
+            </form>
+            <!--            点击AddFruit,跳转到add的页面-->
+<!--            <a th:href="@{/add.html}" style="border:0px solid blue; float: right">Add Fruit</a>-->
+            <a th:href="@{/fruit.do(operate='treatAdd')}" style="border:0px solid blue; float: right">Add Fruit</a>
+        </div>
+
+        <table id="tbl_fruit">
+            <tr>
+                <th class="w20">Name</th>
+                <th class="w20">Price</th>
+                <th class="w20">Storage</th>
+                <th>操作</th>
+            </tr>
+            <tr th:if="${#lists.isEmpty(session.fruitList)}">
+                <td colspan="4">The storage is empty!</td>
+            </tr>
+            <!--内置对象-build-in object-->
+            <tr th:unless="${#lists.isEmpty(session.fruitList)}" th:each="fruit: ${session.fruitList}">
+                <!--                edit.do会给servlet发请求-->
+                <!--                $符号取上下文中的变量：-->
+                <!--                <td><a th:text="${fruit.fname}" th:href="@{'/edit.do?fid =' + ${fruit.fid}}">苹果</a></td>-->
+                <td><a th:text="${fruit.fname}" th:href="@{/fruit.do(fid = ${fruit.fid}, operate='edit')}">苹果</a></td>
+                <td th:text="${fruit.price}">5</td>
+                <td th:text="${fruit.fcount}">20</td>
+                <!--                <td><img src="img/del.jpg" class="delImg" th:onclick="'delFruit('+ ${fruit.fid} + ')'"/></td>-->
+                <!--                ||遇到${}thymleaf表达式的时候，可以认识这是个变量，完成自动拼接字符串-->
+                <td><img src="img/del.jpg" class="delImg" th:onclick="|delFruit(${fruit.fid})|"/></td>
+            </tr>
+        </table>
+        <div style="width: 60%; margin-left: 20%;" class="center">
+            <!--            h:disabled="${session.pateNo == 1}" 用来判断page的页数-->
+            <input type="button" value="Front" class="btn" th:onclick="|page(1)|" th:disabled="${session.pateNo == 1}"/>
+            <input type="button" value="Previous" class="btn" th:onclick="|page(${session.pateNo-1})|"
+                   th:disabled="${session.pateNo == 1}"/>
+            <input type="button" value="Next" class="btn" th:onclick="|page(${session.pateNo+1})|"
+                   th:disabled="${session.pateNo == session.pageCount}"/>
+            <input type="button" value="Last" class="btn" th:onclick="|page(${session.pageCount})|"
+                   th:disabled="${session.pateNo == session.pageCount}"/>
+        </div>
+    </div>
+</div>
+</body>
+</html>

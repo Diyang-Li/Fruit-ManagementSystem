@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- 在html标签内加入Thymeleaf名称空间的声明 -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fruit Edit</title>
+    <link rel="stylesheet" href="css/edit.css">
+</head>
+<body>
+<div id="div_container">
+    <div id="div_fruit_list">
+        <p class="center f30">Edit the Fruit Storage</p>
+        <!--        table 标签内部所使用的所有属性都是来自request中的fruit attribute-->
+        <!--        表单才能submit-->
+        <form th:action="@{/fruit.do}" method="post" th:object="${fruit}">
+            <input type="hidden" name="fid" th:value="*{fid}"/>
+            <input type="hidden" name="operate" value="update">
+            <table id="tbl_fruit" >
+                <tr>
+                    <th class="w20">Name:</th>
+                    <!--                获取请求域的thymleaf表达式-->
+                    <!--                <td><input type="text" name="fname" th:value="${fruit.fname}"/></td>-->
+                    <td><input type="text" name="fname" th:value="*{fname}"/></td>
+                </tr>
+                <tr>
+                    <th class="w20">Price:</th>
+                    <td><input type="text" name="price" th:value="*{price}"/></td>
+                </tr>
+                <tr>
+                    <th class="w20">Storage:</th>
+                    <td><input type="text" name="fcount" th:value="*{fcount}"/></td>
+                </tr>
+                <tr>
+                    <th class="w20">Remark:</th>
+                    <td><input type="text" name="remark" th:value="*{remark}"/></td>
+                </tr>
+                <tr>
+                    <th class="w20" colspan="2"><input type="submit" value="SUBMIT"/></th>
+                </tr>
+
+            </table>
+        </form>
+    </div>
+</div>
+</body>
+</html>
